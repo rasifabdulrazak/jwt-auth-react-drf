@@ -10,20 +10,20 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 import axios from 'axios';
 
-export default function Login() {
+export default function AdminLogin() {
   const navigate = useNavigate();
   const {register,reset,trigger,setError,handleSubmit,formState:{errors}}=useForm();
   const [username,setUsername] = useState();
   const [password,setPassword] = useState();
   const [err,setErr] = useState();
   const [authTokens, setAuthTokens] = useState(() =>
-  localStorage.getItem("authTokens")
-    ? JSON.parse(localStorage.getItem("authTokens"))
+  localStorage.getItem("admin_authTokens")
+    ? JSON.parse(localStorage.getItem("admin_authTokens"))
     : null
 );
 const [user, setUser] = useState(() =>
-  localStorage.getItem("authTokens")
-    ? jwt_decode(localStorage.getItem("authTokens"))
+  localStorage.getItem("admin_authTokens")
+    ? jwt_decode(localStorage.getItem("admin_authTokens"))
     : null
 );
 
@@ -43,9 +43,12 @@ const [user, setUser] = useState(() =>
     if (response.status === 200) {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate("/");
-     
+      if (user.is_superuser){
+        localStorage.setItem("admin_authTokens", JSON.stringify(data));
+        navigate("/adminpanelcrud");
+        window.location.reload(false);
+      }
+        
       
       
     } else {
@@ -54,28 +57,6 @@ const [user, setUser] = useState(() =>
   };
 
 
-  // const loginUser = async (username, password) => {
-  //   await axios({ method: "post", url: "http://127.0.0.1:8000/api/token/", data: {username:username,password:password} })
-  //   .then((response) => {
-      
-  //     if (response.status === 200) {
-  //       setAuthTokens(data);
-  //       setUser(jwt_decode(data.access));
-  //       localStorage.setItem("authTokens", JSON.stringify(data));
-  //       navigate("/");
-        
-  //   })
-  //   .catch((error) => {
-  //        console.log(error.response.data);
-
-  //        if (error.response.data.username) {
-  //             setError("username", { type: "server", message: error.response.data.username });
-  //        }
-  //        if (error.response.data.password) {
-  //             setError("password", { type: "server", message: error.response.data.password[0] });
-  //        }
-  //   });
-  // };
 
 
   const onSubmit = e => {
@@ -87,7 +68,7 @@ const [user, setUser] = useState(() =>
   return (
     <Box
     >
-      <div className='text-center mt-5'><h1 style={{color: "grey"}}>User Login Here</h1></div>
+      <div className='text-center mt-5'><h1 style={{color: "grey"}}>Admin Login Here</h1></div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='text-center'>{err?(<p style={{color:"red"}}>{err}</p>):(null)}</div>
       <div className='text-center mt-3'>

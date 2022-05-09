@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -21,73 +22,111 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  const loginUser = async (username, password) => {
-    const response = await fetch("http://127.0.0.1:8000/api/token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username,
-        password
-      })
-    });
-    const data = await response.json();
 
-    if (response.status === 200) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate("/");
-    } else {
-      alert("Invalid username and password");
-    }
-  };
+  // const loginUser = async (username, password) => {
+  //   const response = await fetch("http://127.0.0.1:8000/api/token/", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       username,
+  //       password
+  //     })
+  //   });
+  //   const data = await response.json();
+  //   if (response.status === 200) {
+  //     setAuthTokens(data);
+  //     setUser(jwt_decode(data.access));
+  //     localStorage.setItem("authTokens", JSON.stringify(data));
+  //     navigate("/");
+  //   } else {
+  //     alert("Invalid username and password");
+  //   }
+  // };
   
-  const registerUser = async (username,email, password, password2) => {
-    const response = await fetch("http://127.0.0.1:8000/api/register/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        password2
-      })
-    });
-    if (response.status === 201) {
-      navigate("/login");
-    } else {
-      alert("Something went wrong!");
-    }
-  };
 
-  const addUser = async (username,email, password, password2) => {
-    const response = await fetch("http://127.0.0.1:8000/api/register/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        password2
-      })
-    });
-    if (response.status === 201) {
-      navigate("/adminpanelcrud");
-    } else {
-      alert("Something went wrong!");
-    }
+  // const registerUser = async (username,email, password, password2) => {
+  //   const response = await fetch("http://127.0.0.1:8000/api/register/", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       username,
+  //       email,
+  //       password,
+  //       password2
+  //     })
+  //   }).catch((err)=>{
+  //     console.log(err.response.data.username);
+  //   });
+  //   if (response.status === 201) {
+  //     navigate("/login");
+  //   } else {
+  //     alert("User name already exist!");
+  //   }
+  // };
+
+
+//   axios({ method: "post", url: "http://127.0.0.1:8000/api/register/", data: {username:username,email:email,password:password,password2:password2} })
+//   .then((response) => {
+//        navigate("/login");
+//   })
+//   .catch((error) => {
+//        console.log(error.response.data);
+//        if (error.response.data.username) {
+//             setError("username", { type: "server", message: error.response.data.username });
+//        }
+//        if (error.response.data.email) {
+//             setError("email", { type: "server", message: error.response.data.email });
+//        }
+//        if (error.response.data.password) {
+//             setError("password", { type: "server", message: error.response.data.password[0] });
+//        }
+//        if (error.response.data.password2) {
+//             setError("password2", { type: "server", message: error.response.data.password2[0] });
+//        }
+//   });
+// };
+
+
+
+
+  // const addUser = async (username,email, password, password2) => {
+  //   const response = await fetch("http://127.0.0.1:8000/api/register/", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       username,
+  //       email,
+  //       password,
+  //       password2
+  //     })
+  //   });
+  //   if (response.status === 201) {
+  //     navigate("/");
+  //   } else {
+  //     alert("Something went wrong!");
+  //     console.log(username,password,email)
+  //   }
+  // };
+
+  const logoutAdmin = () => {
+    setAuthTokens(null);
+    setUser(null);
+    localStorage.removeItem("authTokens");
+    window.location.reload(false);
+    navigate("/");
   };
 
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    window.location.reload(false);
     navigate("/");
   };
 
@@ -96,10 +135,8 @@ export const AuthProvider = ({ children }) => {
     setUser,
     authTokens,
     setAuthTokens,
-    registerUser,
-    loginUser,
     logoutUser,
-    addUser,
+
   };
 
   useEffect(() => {

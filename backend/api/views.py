@@ -24,7 +24,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 class Userdetails(viewsets.ModelViewSet):
-    queryset = User.objects.filter(is_superuser=0)
+    queryset = User.objects.filter(is_superuser=0).order_by('-date_joined')
     serializer_class = UserView
 
 

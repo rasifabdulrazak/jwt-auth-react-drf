@@ -12,6 +12,7 @@ import ProtectedPage from "./views/ProtectedPage";
 import Admin from "./views/Admin";
 import AddUser from "./views/AddUser";
 import EditUser from "./views/EditUser";
+import AdminLogin from "./views/AdminLogin";
 
 function App() {
   return (
@@ -19,14 +20,13 @@ function App() {
       <div className="flex flex-col min-h-screen overflow-hidden">
         <AuthProvider>
           <Navbar />
-          
-          
           <Routes>
             <Route element={<ProtectedPage/>} path="/protected" exact />
             <Route element={<Login/>} path="/login" />
             <Route element={<Register/>} path="/register" />
             <Route element={<Home/>} path="/" />
             <Route element={<Admin/>} path="/adminpanelcrud" />
+            <Route element={<AdminLogin/>} path="/adminlogin" />
             <Route element={<AddUser/>} path="/adminpanelcrud/adduser" />
             <Route element={<EditUser/>} path="/adminpanelcrud/edituser/:id" />
           </Routes>

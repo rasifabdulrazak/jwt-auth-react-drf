@@ -29,7 +29,6 @@ function EditUser() {
     useEffect(() => {
         axios.get(`http://127.0.0.1:8000/user/users/${id}/`)
         .then(res => {
-         console.log(res.data)
          setUsername (res.data.username)
          setEmail (res.data.email)
         })

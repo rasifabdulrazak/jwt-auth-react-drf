@@ -7,9 +7,24 @@ import Admin from "./Admin";
 
 const Home = () => {
   const { user } = useContext(AuthContext);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   return (
     <section className="text-center mt-5">
-      {user?(user.is_superuser?(<Admin></Admin>):(<UserInfo user={user} />)):(<h1 className="text-center mt-5">You are on home page!</h1>)}
+      {user?((<UserInfo user={user} />)):(
+      <>
+      <div>
+        <p><h1>You are on home page</h1></p>
+      </div>
+      </>
+      
+
+      
+      )}
       {/* <h1 className="text-center mt-5">You are on home page!</h1> */}
     </section>
   );
